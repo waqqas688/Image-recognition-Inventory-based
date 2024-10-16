@@ -3,12 +3,9 @@ from matplotlib import image
 import numpy as np
 import cv2
 
-
-
 def Init_model():
     
     np.set_printoptions(suppress=True)
-    # Load the model
     try:
         model = keras.models.load_model('keras_model.h5')
         data = np.ndarray(shape=(10, 224, 224, 3), dtype=np.float32)
@@ -26,7 +23,6 @@ def Det_cam(model,data):
         ret,image=vid.read()
         if not ret:
             break
-        
         key=cv2.waitKey(1)
         if key%256==27:
             print("Escaped")
@@ -37,8 +33,6 @@ def Det_cam(model,data):
         data[0] = normalized_image_array
 
         prediction = model.predict(data)
-        # print(prediction)
-
         for i in prediction:
             if i[0]>0.7:
                 text="person"
@@ -49,8 +43,6 @@ def Det_cam(model,data):
             image=cv2.resize(image,(500,500))
             cv2.putText(image,text,(10,30),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,255),2,cv2.LINE_8)
         cv2.imshow("test",image)
-
-
 
 def main():
     model,data=Init_model()
